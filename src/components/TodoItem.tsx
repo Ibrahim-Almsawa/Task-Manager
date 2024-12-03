@@ -1,60 +1,156 @@
-import React from 'react';
-import { Trash2, Edit, Check, X } from 'lucide-react';
+import React, { useState } from 'react';
 import { Todo } from '../types/todo';
+import { Calendar, Clock, Tag, Trash2, Edit2, CheckCircle, Circle, MoreVertical, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format } from 'date-fns';
 
 interface TodoItemProps {
   todo: Todo;
-  onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (todo: Todo) => void;
+  onToggleComplete: (id: string) => void;
 }
 
-export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
+export function TodoItem({ todo, onDelete, onEdit, onToggleComplete }: TodoItemProps) {
+  const { t } = useTranslation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const getPriorityColor = (priority: string | undefined) => {
+    if (!priority) return 'bg-gray-100 text-gray-800';
+    
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return 'bg-red-100 text-red-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'low':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const formatDate = (date: string | undefined) => {
+    if (!date) return '';
+    try {
+      return format(new Date(date), 'MMM dd, yyyy');
+    } catch {
+      return date;
+    }
+  };
+
+  const isOverdue = () => {
+    if (!todo.dueDate || !todo.time) return false;
+    try {
+      const dueDate = new Date(`${todo.dueDate} ${todo.time}`);
+      return dueDate < new Date() && !todo.completed;
+    } catch {
+      return false;
+    }
+  };
+
   return (
-    <div className={`flex items-center justify-between p-4 bg-white rounded-lg shadow-sm border-l-4 ${
-      todo.completed ? 'border-green-500' : 'border-blue-500'
-    } mb-3 hover:shadow-md transition-shadow`}>
-      <div className="flex items-center space-x-4">
-        <button
-          onClick={() => onToggle(todo.id)}
-          className={`p-2 rounded-full ${
-            todo.completed ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
-          } hover:bg-opacity-80`}
-        >
-          {todo.completed ? <Check className="w-5 h-5" /> : <X className="w-5 h-5" />}
-        </button>
-        
-        <div className="flex-1">
-          <h3 className={`text-lg font-medium ${
-            todo.completed ? 'text-gray-500 line-through' : 'text-gray-900'
-          }`}>
-            {todo.title}
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className={`todo-item-container ${todo.completed ? 'completed' : ''} ${isOverdue() ? 'overdue' : ''}`}
+    >
+      <div className="todo-item-header" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className="todo-item-checkbox">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleComplete(todo.id);
+            }}
+            className="checkbox-btn"
+          >
+            {todo.completed ? (
+              <CheckCircle className="w-5 h-5 text-green-500" />
+            ) : (
+              <Circle className="w-5 h-5 text-gray-400" />
+            )}
+          </button>
+        </div>
+
+        <div className="todo-item-content">
+          <h3 className={`todo-item-title ${todo.completed ? 'line-through text-gray-500' : ''}`}>
+            {todo.title || t('Untitled Task')}
           </h3>
-          {todo.description && (
-            <p className="text-gray-600 text-sm mt-1">{todo.description}</p>
-          )}
-          {todo.dueDate && (
-            <p className="text-sm text-gray-500 mt-1">
-              Due: {new Date(todo.dueDate).toLocaleDateString()}
-            </p>
-          )}
+          
+          <div className="todo-item-meta">
+            {todo.dueDate && (
+              <div className="todo-item-date">
+                <Calendar className="w-4 h-4" />
+                <span>{formatDate(todo.dueDate)}</span>
+              </div>
+            )}
+            {todo.time && (
+              <div className="todo-item-time">
+                <Clock className="w-4 h-4" />
+                <span>{todo.time}</span>
+              </div>
+            )}
+            {isOverdue() && (
+              <div className="todo-item-overdue">
+                <AlertCircle className="w-4 h-4" />
+                <span>{t('Overdue')}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="todo-item-actions">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(todo);
+            }}
+            className="edit-btn"
+            aria-label={t('Edit task')}
+          >
+            <Edit2 className="w-4 h-4 text-blue-500 hover:text-blue-600" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(todo.id);
+            }}
+            className="delete-btn"
+            aria-label={t('Delete task')}
+          >
+            <Trash2 className="w-4 h-4 text-red-500 hover:text-red-600" />
+          </button>
         </div>
       </div>
 
-      <div className="flex space-x-2">
-        <button
-          onClick={() => onEdit(todo)}
-          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-full"
-        >
-          <Edit className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => onDelete(todo.id)}
-          className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full"
-        >
-          <Trash2 className="w-5 h-5" />
-        </button>
-      </div>
-    </div>
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="todo-item-details"
+          >
+            {todo.description && (
+              <p className="todo-item-description">{todo.description}</p>
+            )}
+            {todo.tags && todo.tags.length > 0 && (
+              <div className="todo-item-tags">
+                {todo.tags.map((tag) => (
+                  <span key={tag} className="todo-tag">
+                    <Tag className="w-3 h-3" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

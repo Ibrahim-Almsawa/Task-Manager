@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Todo } from '../types/todo';
+import { Todo, TodoFormData } from '../types/todo';
 
 export function useTodos() {
   const [todos, setTodos] = useState<Todo[]>(() => {
@@ -11,12 +11,15 @@ export function useTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  const addTodo = (title: string, description: string, dueDate: string) => {
+  const addTodo = (formData: TodoFormData) => {
     const newTodo: Todo = {
       id: crypto.randomUUID(),
-      title,
-      description,
-      dueDate,
+      title: formData.title,
+      description: formData.description,
+      dueDate: formData.dueDate,
+      time: formData.time,
+      priority: formData.priority,
+      tags: formData.tags,
       completed: false,
       createdAt: new Date().toISOString(),
     };
@@ -35,13 +38,16 @@ export function useTodos() {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
-  const updateTodo = (
-    id: string,
-    { title, description, dueDate }: Partial<Todo>
-  ) => {
+  const updateTodo = (id: string, formData: Partial<TodoFormData>) => {
     setTodos((prev) =>
       prev.map((todo) =>
-        todo.id === id ? { ...todo, title, description, dueDate } : todo
+        todo.id === id
+          ? {
+              ...todo,
+              ...formData,
+              updatedAt: new Date().toISOString(),
+            }
+          : todo
       )
     );
   };

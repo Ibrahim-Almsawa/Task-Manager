@@ -1,3 +1,350 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .form-container {
+    @apply max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg;
+  }
+
+  .form-header {
+    @apply text-2xl font-semibold mb-6 text-gray-800;
+  }
+
+  .form-section {
+    @apply space-y-2;
+  }
+
+  .form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .input-group {
+    @apply relative mb-6;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+           transition-all duration-200 ease-in-out;
+  }
+
+  .form-input-with-icon {
+    @apply pl-10;
+  }
+
+  .form-textarea {
+    @apply resize-none min-h-[100px];
+  }
+
+  .form-input-error {
+    @apply border-red-300 focus:ring-red-500;
+  }
+
+  .form-input-success {
+    @apply border-green-300 focus:ring-green-500;
+  }
+
+  .input-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none;
+  }
+
+  .input-icon-success {
+    @apply absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500;
+  }
+
+  .error-icon {
+    @apply w-4 h-4 text-red-500;
+  }
+
+  .input-clear-btn {
+    @apply absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full
+           hover:bg-gray-100 text-gray-400 hover:text-gray-600
+           transition-colors duration-200;
+  }
+
+  .floating-label {
+    @apply absolute left-4 -top-2 px-1 text-sm text-gray-500 bg-white
+           transform transition-all duration-200 pointer-events-none;
+  }
+
+  .form-input:focus ~ .floating-label,
+  .form-input:not(:placeholder-shown) ~ .floating-label {
+    @apply -top-2 left-3 scale-90 text-blue-600;
+  }
+
+  .form-textarea:focus ~ .floating-label,
+  .form-textarea:not(:placeholder-shown) ~ .floating-label {
+    @apply -top-2 left-3 scale-90 text-blue-600;
+  }
+
+  .required-field::after {
+    content: "*";
+    @apply text-red-500 ml-1;
+  }
+
+  .character-count {
+    @apply absolute right-3 -bottom-6 text-sm text-gray-500;
+  }
+
+  .character-count-warning {
+    @apply text-yellow-600;
+  }
+
+  .character-count-error {
+    @apply text-red-600;
+  }
+
+  .input-error-text {
+    @apply absolute -bottom-6 left-0 text-sm text-red-600 flex items-center gap-1;
+  }
+
+  .tags-container {
+    @apply flex flex-wrap gap-2 mt-2;
+  }
+
+  .tag-pill {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 text-blue-800
+           text-sm font-medium;
+  }
+
+  .tag-remove-btn {
+    @apply p-0.5 hover:bg-blue-200 rounded-full transition-colors duration-200;
+  }
+
+  .tag-suggestions {
+    @apply absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200
+           max-h-48 overflow-y-auto;
+  }
+
+  .tag-suggestion-item {
+    @apply px-3 py-2 hover:bg-blue-50 cursor-pointer flex items-center text-sm text-gray-700;
+  }
+
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg
+           font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+           focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
+           transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 px-6 py-2.5 bg-gray-100 text-gray-800 rounded-lg
+           font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500
+           focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .custom-select {
+    @apply appearance-none bg-no-repeat bg-right pr-10;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+  }
+
+  .custom-date::-webkit-calendar-picker-indicator,
+  .custom-time::-webkit-calendar-picker-indicator {
+    @apply opacity-0 absolute right-0 top-0 bottom-0 w-full cursor-pointer;
+  }
+
+  .loading-spinner {
+    @apply animate-spin h-4 w-4 text-white;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .input-shake {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  }
+
+  /* TodoItem Styles */
+  .todo-item-container {
+    @apply bg-white rounded-lg shadow-sm p-4 mb-4 border border-gray-100 transition-all duration-200;
+  }
+
+  .todo-item-container:hover {
+    @apply shadow-md border-gray-200;
+  }
+
+  .todo-item-container.completed {
+    @apply bg-gray-50;
+  }
+
+  .todo-item-container.overdue {
+    @apply border-red-200 bg-red-50;
+  }
+
+  .todo-item-header {
+    @apply flex items-start gap-3 cursor-pointer;
+  }
+
+  .todo-item-checkbox {
+    @apply flex-shrink-0 pt-1;
+  }
+
+  .checkbox-btn {
+    @apply p-0.5 rounded-full hover:bg-gray-100 transition-colors;
+  }
+
+  .todo-item-content {
+    @apply flex-grow min-w-0;
+  }
+
+  .todo-item-title {
+    @apply text-gray-900 font-medium mb-1 truncate;
+  }
+
+  .todo-item-meta {
+    @apply flex flex-wrap gap-3 text-sm text-gray-500;
+  }
+
+  .todo-item-date,
+  .todo-item-time,
+  .todo-item-overdue {
+    @apply flex items-center gap-1;
+  }
+
+  .todo-item-overdue {
+    @apply text-red-600;
+  }
+
+  .todo-item-actions {
+    @apply flex items-center gap-2 flex-shrink-0;
+  }
+
+  .todo-priority-badge {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .action-btn {
+    @apply p-1 rounded-full hover:bg-gray-100 transition-colors;
+  }
+
+  .todo-item-menu {
+    @apply absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[140px] z-10;
+  }
+
+  .menu-item {
+    @apply flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors;
+  }
+
+  .todo-item-details {
+    @apply mt-4 overflow-hidden;
+  }
+
+  .todo-item-description {
+    @apply text-gray-600 text-sm mb-3;
+  }
+
+  .todo-item-tags {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .todo-tag {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs;
+  }
+
+  /* TodoList Styles */
+  .todo-list-controls {
+    @apply flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg shadow-sm
+           border border-gray-100 transition-all duration-200;
+  }
+
+  .todo-list-controls:hover {
+    @apply shadow-md border-gray-200;
+  }
+
+  .todo-list-select {
+    @apply text-sm border-none bg-transparent focus:ring-2 focus:ring-blue-500 rounded-md
+           hover:bg-gray-100 transition-colors duration-200 cursor-pointer
+           py-1 pl-2 pr-8;
+  }
+
+  .todo-list-button {
+    @apply p-1 hover:bg-gray-200 rounded-full transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .todo-list-group-header {
+    @apply text-sm font-medium text-gray-500 uppercase tracking-wider
+           pb-2 border-b border-gray-200;
+  }
+
+  .todo-list-empty {
+    @apply flex flex-col items-center justify-center py-12 text-gray-500
+           space-y-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200;
+  }
+
+  .todo-list-empty-icon {
+    @apply w-16 h-16 stroke-1 text-gray-400;
+  }
+
+  .todo-list-empty-text {
+    @apply text-lg font-medium text-gray-600;
+  }
+
+  .todo-list-empty-subtext {
+    @apply text-sm text-gray-500;
+  }
+
+  .todo-list-counter {
+    @apply ml-auto text-sm text-gray-500 font-medium;
+  }
+
+  /* Animation classes */
+  .fade-enter {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .fade-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+
+  .fade-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fade-exit-active {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 200ms ease-in, transform 200ms ease-in;
+  }
+
+  /* Animation classes for TodoList */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+
+  .todo-list-enter {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+
+  .todo-list-exit {
+    animation: slideOut 0.3s ease-out forwards;
+  }
+}
